@@ -20,6 +20,199 @@ When you save the notebook, an HTML file containing the code and output will be 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
 ```{r}
+library(readxl)
+
+Df1dataset <- read_delim("Data/Experiment3New_LBmedia_BW ybeX pTB plasmids-ONcells-2021.txt", "\t", escape_double = FALSE, trim_ws = TRUE) 
+
+Df2dataset <- read_delim("Data/Experiment4New_filtLBmedia_BW ybeX pTB plasmids-ONcells rep-2021.txt", "\t", escape_double = FALSE, trim_ws = TRUE) 
+
+Df3dataset <- read_delim("Data/Experiment5New_filtLBmedia_BW ybeX pTB plasmids-ONcells rep2-2021.txt", "\t", escape_double = FALSE, trim_ws = TRUE) 
 
 ```
+
+```{r}
+Df1dataset$Time_min <- seq(14.10, 1380, by=15)
+Df2dataset$Time_min <- seq(14.10, 1395, by=15)
+Df3dataset$Time_min <- seq(14.10, 1455, by=15)
+```
+
+
+```{r}
+WTpTBempty <- Df2dataset[c("Time_min", "B2","C2", "D2","E2","F2","G2")]
+
+YbeXpTBempty <- Df2dataset[c("Time_min", "B3","C3", "D3","E3","F3","G3")]
+
+ybeXpTBybeX <- Df2dataset[c("Time_min", "B4","C4", "D4","E4","F4","G4")]
+
+ybeXpTBybeY <- Df2dataset[c("Time_min", "B5","C5", "D5","E5","F5","G5")]
+
+ybeXpTBybeZ <- Df2dataset[c("Time_min", "B6","C6", "D6","E6","F6","G6")]
+
+ybeXpTBLnt <-  Df2dataset[c("Time_min", "B7","C7", "D7","E7","F7","G7")]
+
+ybeXpTBcorA <- Df2dataset[c("Time_min", "B8","C8", "D8","E8","F8","G8")]
+
+ybeXpTBrbfA <- Df2dataset[c("Time_min", "B9","C9", "D9","E9","F9","G9")]
+
+ybeXpTBrimM <- Df2dataset[c("Time_min", "B10","C10", "D10","E10","F10","G10")]
+
+```
+
+
+```{r}
+library(tidyr)
+library(reshape2)
+```
+
+
+
+```{r}
+WTpTBempty <- melt( data = WTpTBempty,id.vars = "Time_min")
+WTpTBempty <- mutate(WTpTBempty, Strain =  "WT Keio", Date = "2021-11-06", plasmid="empty")
+WTpTBempty <- mutate(WTpTBempty, Inducer = case_when(variable %in% c("B2","C2","D2") ~ "noIPTG",  variable %in% c("E2","F2","G2") ~ "IPTG"))
+
+YbeXpTBempty <- melt( data = YbeXpTBempty,id.vars = "Time_min")
+YbeXpTBempty <- mutate(YbeXpTBempty, Strain =  "ybeX::KAN", Date = "2021-11-06", plasmid="empty")
+YbeXpTBempty <- mutate(YbeXpTBempty, Inducer = case_when(variable %in% c("B3","C3","D3") ~ "noIPTG",  variable %in% c("E3","F3","G3") ~ "IPTG"))
+
+ybeXpTBybeX <- melt( data = ybeXpTBybeX,id.vars = "Time_min")
+ybeXpTBybeX <- mutate(ybeXpTBybeX, Strain =  "ybeX::KAN", Date = "2021-11-06", plasmid="ybeX")
+ybeXpTBybeX <- mutate(ybeXpTBybeX, Inducer = case_when(variable %in% c("B4","C4","D4") ~ "noIPTG",  variable %in% c("E4","F4","G4") ~ "IPTG"))
+
+ybeXpTBybeY <- melt( data = ybeXpTBybeY,id.vars = "Time_min")
+ybeXpTBybeY <- mutate(ybeXpTBybeY, Strain =  "ybeX::KAN", Date = "2021-11-06", plasmid="ybeY")
+ybeXpTBybeY <- mutate(ybeXpTBybeY, Inducer = case_when(variable %in% c("B5","C5","D5") ~ "noIPTG",  variable %in% c("E5","F5","G5") ~ "IPTG"))
+
+ybeXpTBybeZ <- melt( data = ybeXpTBybeZ,id.vars = "Time_min")
+ybeXpTBybeZ <- mutate(ybeXpTBybeZ, Strain =  "ybeX::KAN", Date = "2021-11-06", plasmid="ybeZ")
+ybeXpTBybeZ <- mutate(ybeXpTBybeZ, Inducer = case_when(variable %in% c("B6","C6","D6") ~ "noIPTG",  variable %in% c("E6","F6","G6") ~ "IPTG"))
+
+ybeXpTBLnt <- melt( data = ybeXpTBLnt,id.vars = "Time_min")
+ybeXpTBLnt <- mutate(ybeXpTBLnt, Strain =  "ybeX::KAN", Date = "2021-11-06", plasmid="Lnt")
+ybeXpTBLnt <- mutate(ybeXpTBLnt, Inducer = case_when(variable %in% c("B7","C7","D7") ~ "noIPTG",  variable %in% c("E7","F7","G7") ~ "IPTG"))
+
+ybeXpTBcorA <- melt( data = ybeXpTBcorA,id.vars = "Time_min")
+ybeXpTBcorA <- mutate(ybeXpTBcorA, Strain =  "ybeX::KAN", Date = "2021-11-06", plasmid="corA")
+ybeXpTBcorA <- mutate(ybeXpTBcorA, Inducer = case_when(variable %in% c("B8","C8","D8") ~ "noIPTG",  variable %in% c("E8","F8","G8") ~ "IPTG"))
+
+ybeXpTBrbfA <- melt( data = ybeXpTBrbfA,id.vars = "Time_min")
+ybeXpTBrbfA <- mutate(ybeXpTBrbfA, Strain =  "ybeX::KAN", Date = "2021-11-06", plasmid="rbfA")
+ybeXpTBrbfA <- mutate(ybeXpTBrbfA, Inducer = case_when(variable %in% c("B9","C9","D9") ~ "noIPTG",  variable %in% c("E9","F9","G9") ~ "IPTG"))
+
+ybeXpTBrimM <- melt( data = ybeXpTBrimM,id.vars = "Time_min")
+ybeXpTBrimM <- mutate(ybeXpTBrimM, Strain =  "ybeX::KAN", Date = "2021-11-06", plasmid ="rimM")
+ybeXpTBrimM <- mutate(ybeXpTBrimM, Inducer = case_when(variable %in% c("B10","C10","D10") ~ "noIPTG",  variable %in% c("E10","F10","G10") ~ "IPTG"))
+```
+
+```{r}
+databind <- rbind(WTpTBempty, YbeXpTBempty, ybeXpTBybeX, ybeXpTBybeY, ybeXpTBybeZ, ybeXpTBLnt, ybeXpTBcorA, ybeXpTBrbfA, ybeXpTBrimM)
+```
+
+
+```{r}
+databind %>% filter(Time_min < 600) %>% ggplot()+
+  geom_line(aes(x= Time_min, y=value, color=plasmid, shape=Strain))+
+  facet_wrap(~Inducer)
+```
+
+
+```{r}
+WTpTBempty <- Df3dataset[c("Time_min", "B2","C2", "D2","E2","F2","G2")]
+
+YbeXpTBempty <- Df3dataset[c("Time_min", "B3","C3", "D3","E3","F3","G3")]
+
+ybeXpTBybeX <- Df3dataset[c("Time_min", "B4","C4", "D4","E4","F4","G4")]
+
+ybeXpTBybeY <- Df3dataset[c("Time_min", "B5","C5", "D5","E5","F5","G5")]
+
+ybeXpTBybeZ <- Df3dataset[c("Time_min", "B6","C6", "D6","E6","F6","G6")]
+
+ybeXpTBLnt <-  Df3dataset[c("Time_min", "B7","C7", "D7","E7","F7","G7")]
+
+ybeXpTBcorA <- Df3dataset[c("Time_min", "B8","C8", "D8","E8","F8","G8")]
+
+ybeXpTBrbfA <- Df3dataset[c("Time_min", "B9","C9", "D9","E9","F9","G9")]
+
+ybeXpTBrimM <- Df3dataset[c("Time_min", "B10","C10", "D10","E10","F10","G10")]
+
+```
+
+
+```{r}
+WTpTBempty <- melt( data = WTpTBempty,id.vars = "Time_min")
+WTpTBempty <- mutate(WTpTBempty, Strain =  "WT Keio", Date = "2021-11-07", plasmid="empty")
+WTpTBempty <- mutate(WTpTBempty, Inducer = case_when(variable %in% c("B2","C2","D2") ~ "noIPTG",  variable %in% c("E2","F2","G2") ~ "IPTG"))
+
+YbeXpTBempty <- melt( data = YbeXpTBempty,id.vars = "Time_min")
+YbeXpTBempty <- mutate(YbeXpTBempty, Strain =  "ybeX::KAN", Date = "2021-11-07", plasmid="empty")
+YbeXpTBempty <- mutate(YbeXpTBempty, Inducer = case_when(variable %in% c("B3","C3","D3") ~ "noIPTG",  variable %in% c("E3","F3","G3") ~ "IPTG"))
+
+ybeXpTBybeX <- melt( data = ybeXpTBybeX,id.vars = "Time_min")
+ybeXpTBybeX <- mutate(ybeXpTBybeX, Strain =  "ybeX::KAN", Date = "2021-11-07", plasmid="ybeX")
+ybeXpTBybeX <- mutate(ybeXpTBybeX, Inducer = case_when(variable %in% c("B4","C4","D4") ~ "noIPTG",  variable %in% c("E4","F4","G4") ~ "IPTG"))
+
+ybeXpTBybeY <- melt( data = ybeXpTBybeY,id.vars = "Time_min")
+ybeXpTBybeY <- mutate(ybeXpTBybeY, Strain =  "ybeX::KAN", Date = "2021-11-07", plasmid="ybeY")
+ybeXpTBybeY <- mutate(ybeXpTBybeY, Inducer = case_when(variable %in% c("B5","C5","D5") ~ "noIPTG",  variable %in% c("E5","F5","G5") ~ "IPTG"))
+
+ybeXpTBybeZ <- melt( data = ybeXpTBybeZ,id.vars = "Time_min")
+ybeXpTBybeZ <- mutate(ybeXpTBybeZ, Strain =  "ybeX::KAN", Date = "2021-11-07", plasmid="ybeZ")
+ybeXpTBybeZ <- mutate(ybeXpTBybeZ, Inducer = case_when(variable %in% c("B6","C6","D6") ~ "noIPTG",  variable %in% c("E6","F6","G6") ~ "IPTG"))
+
+ybeXpTBLnt <- melt( data = ybeXpTBLnt,id.vars = "Time_min")
+ybeXpTBLnt <- mutate(ybeXpTBLnt, Strain =  "ybeX::KAN", Date = "2021-11-07", plasmid="Lnt")
+ybeXpTBLnt <- mutate(ybeXpTBLnt, Inducer = case_when(variable %in% c("B7","C7","D7") ~ "noIPTG",  variable %in% c("E7","F7","G7") ~ "IPTG"))
+
+ybeXpTBcorA <- melt( data = ybeXpTBcorA,id.vars = "Time_min")
+ybeXpTBcorA <- mutate(ybeXpTBcorA, Strain =  "ybeX::KAN", Date = "2021-11-07", plasmid="corA")
+ybeXpTBcorA <- mutate(ybeXpTBcorA, Inducer = case_when(variable %in% c("B8","C8","D8") ~ "noIPTG",  variable %in% c("E8","F8","G8") ~ "IPTG"))
+
+ybeXpTBrbfA <- melt( data = ybeXpTBrbfA,id.vars = "Time_min")
+ybeXpTBrbfA <- mutate(ybeXpTBrbfA, Strain =  "ybeX::KAN", Date = "2021-11-07", plasmid="rbfA")
+ybeXpTBrbfA <- mutate(ybeXpTBrbfA, Inducer = case_when(variable %in% c("B9","C9","D9") ~ "noIPTG",  variable %in% c("E9","F9","G9") ~ "IPTG"))
+
+ybeXpTBrimM <- melt( data = ybeXpTBrimM,id.vars = "Time_min")
+ybeXpTBrimM <- mutate(ybeXpTBrimM, Strain =  "ybeX::KAN", Date = "2021-11-07", plasmid ="rimM")
+ybeXpTBrimM <- mutate(ybeXpTBrimM, Inducer = case_when(variable %in% c("B10","C10","D10") ~ "noIPTG",  variable %in% c("E10","F10","G10") ~ "IPTG"))
+```
+
+```{r}
+databind2 <- rbind(WTpTBempty, YbeXpTBempty, ybeXpTBybeX, ybeXpTBybeY, ybeXpTBybeZ, ybeXpTBLnt, ybeXpTBcorA, ybeXpTBrbfA, ybeXpTBrimM)
+```
+
+
+```{r}
+databind2 %>% filter(Time_min < 600) %>% ggplot()+
+  geom_line(aes(x= Time_min, y=value, color=plasmid, shape=Strain))+
+  facet_wrap(~Inducer)
+```
+
+
+```{r}
+bindall <- rbind(databind, databind2)
+```
+
+```{r}
+bindall %>% filter(Time_min < 600) %>% ggplot()+
+  geom_line(aes(x= Time_min, y=value, color=plasmid, shape=Strain))+
+  facet_grid(Date~Inducer)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
